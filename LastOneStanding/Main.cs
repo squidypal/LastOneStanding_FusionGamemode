@@ -15,7 +15,7 @@ using SwipezGamemodeLib.Utilities;
 
 namespace LastOneStanding
 {
-    public class Class1 : MelonMod
+    public class Main : MelonMod
     {
         public override void OnInitializeMelon()
         {
@@ -96,6 +96,7 @@ namespace LastOneStanding
             {
                 switch (type)
                 {
+                    // DEATH is triggered whenever a player respawns after being killed
                     case PlayerActionType.DEATH:
                         MakePlayerSpectator(player);
                         // Remove player ID from list of players
@@ -340,6 +341,7 @@ namespace LastOneStanding
         }
         
         // For PVP gamemodes I would recommend just copy and pasting most if not all of this code
+        // You'll need to copy any variables used here too if you want to use them in your gamemode
         public override void OnMainSceneInitialized() {
             if (!_hasOverridenValues) {
                 SetDefaultValues();
@@ -368,6 +370,8 @@ namespace LastOneStanding
             Instance = this;
             
             // Add fusion hooks
+            // Fusion has quite a few hooks, so I would recommend checking them out
+            // These are just the only hooks I needed for this project
             MultiplayerHooking.OnPlayerAction += OnPlayerAction;
             FusionOverrides.OnValidateNametag += OnValidateNametag;
             MultiplayerHooking.OnPlayerLeave += OnPlayerLeave;

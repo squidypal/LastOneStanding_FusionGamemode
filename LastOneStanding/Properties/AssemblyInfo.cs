@@ -3,8 +3,10 @@ using MelonLoader;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Main = LastOneStanding.Main;
+
 // ...
-[assembly: MelonInfo(typeof(Class1), "LastOneStanding", "1.0.0", "squidypal")]
+[assembly: MelonInfo(typeof(Main), "LastOneStanding", "1.0.0", "squidypal")]
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
