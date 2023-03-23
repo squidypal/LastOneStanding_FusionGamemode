@@ -1,6 +1,9 @@
-# ```Installation```
+# ```Github info```
 
-Drag the folder inside into your BONELAB directory or 
+This mod is packed full of comments explainging what's going on, if you're interested in making custom fusion gamemodes, this would be a good place to start!
+
+
+# ```Installation```
 
 Put the `.dll` file in your mods folder
 >The `Mods` folder is located in the same folder as the `BONELAB.exe` file
