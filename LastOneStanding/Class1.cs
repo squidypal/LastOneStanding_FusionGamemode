@@ -5,9 +5,7 @@ using LabFusion.Representation;
 using LabFusion.SDK.Points;
 using LabFusion.Senders;
 using LabFusion.Utilities;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Reflection;
 using LabFusion.SDK.Gamemodes;
 using UnityEngine;
@@ -32,7 +30,7 @@ namespace LastOneStanding
         // Default value for death tax and int used for prize tax
         private const int _defaultVal = 20;
         private int prizeTotal;
-        private int _Val = _defaultVal;
+        private int _val = _defaultVal;
         // Used later for a list of player IDs
         private List<PlayerId> players;
         
@@ -60,8 +58,8 @@ namespace LastOneStanding
             base.OnBoneMenuCreated(category);
 
             // Creating a new Bonemenu element, that allows players to change the death tax
-            category.CreateIntElement("Death tax (Can be set to 0)", Color.green, _Val, 10, 0, 1000, (v) => {
-                _Val = v;
+            category.CreateIntElement("Death tax (Can be set to 0)", Color.green, _val, 10, 0, 1000, (v) => {
+                _val = v;
             });
         }
         
@@ -72,17 +70,17 @@ namespace LastOneStanding
         {
             if (key == "DeathTax")
             {
-                int.TryParse(value, out _Val);
+                int.TryParse(value, out _val);
                 // Calculate prize pool
                 int playerCount = PlayerIdManager.PlayerCount - 1;
-                prizeTotal = _Val * playerCount;
+                prizeTotal = _val * playerCount;
                 
                 FusionNotifier.Send(new FusionNotification()                                  
                 {                                                                             
                     // Send notification with details on prize pool                           
                     title = "Prize Pool",                                                     
                     showTitleOnPopup = true,                                                  
-                    message = "The prize pool is " + prizeTotal + "! " + _Val + " per player!",    
+                    message = "The prize pool is " + prizeTotal + "! " + _val + " per player!",    
                     isMenuItem = false,                                                       
                     isPopup = true,                                                           
                     popupLength = 3f,                                                         
@@ -105,13 +103,13 @@ namespace LastOneStanding
                         if (player == PlayerIdManager.LocalId)
                         {
                             // Remove bits from player
-                            PointItemManager.DecrementBits(_Val);
+                            PointItemManager.DecrementBits(_val);
                             // Tell player they're now spectating, and how many bits they lost
                             FusionNotifier.Send(new FusionNotification()                                    
                             {
                                 title = "YOU DIED!",                                                       
                                 showTitleOnPopup = true,                                                    
-                                message = "You are now spectating! " + _Val + " bits deducted!", 
+                                message = "You are now spectating! " + _val + " bits deducted!", 
                                 popupLength = 3f,                                                           
                                 isMenuItem = false,                                                         
                                 isPopup = true,                                                             
@@ -160,28 +158,32 @@ namespace LastOneStanding
         protected void OnPlayerLeave(PlayerId playerId)
         {
             // If gamemode is active and the player is in the list of players, remove them from the list
-            if (!IsActive()) return;
-            players.Remove(playerId);
-            MakePrizePool();
+            if (IsActive())
+            {
+                players.Remove(playerId);
+                MakePrizePool();
+            }
         }
 
         // Ran whenever a player joins the game
         protected void OnPlayerJoin(PlayerId playerId)
         {
             // If gamemode is active and a player joins, add them to the list of players
-            if (!IsActive()) return;
-            MakePlayerSpectator(playerId);
-            if (playerId == PlayerIdManager.LocalId)
+            if (IsActive())
             {
-                FusionNotifier.Send(new FusionNotification()
+                MakePlayerSpectator(playerId);
+                if (playerId == PlayerIdManager.LocalId)
                 {
-                    title = "YOU ARE SPECTATING",
-                    showTitleOnPopup = true,
-                    message = "You will stop spectating once the round ends",
-                    isMenuItem = false,
-                    isPopup = true,
-                    popupLength = 3f,
-                });
+                    FusionNotifier.Send(new FusionNotification()
+                    {
+                        title = "YOU ARE SPECTATING",
+                        showTitleOnPopup = true,
+                        message = "You will stop spectating once the round ends",
+                        isMenuItem = false,
+                        isPopup = true,
+                        popupLength = 3f,
+                    });
+                }
             }
         }
 
@@ -189,23 +191,21 @@ namespace LastOneStanding
         protected override void OnUpdate()
         {
             // Check if there is only one player left
-            if (IsActive())
+            if (!IsActive()) return;
+            // If there is only one player still alive, end the game 
+            if (players.Count <= 1)
             {
-                // If there is only one player still alive, end the game 
-                if (players.Count <= 1)
-                {
-                    StopGamemode();
-                }
+                StopGamemode();
             }
         }
 
-        public void MakePrizePool()
+        private void MakePrizePool()
         {
             // Check if player is the server owner, and if they are send the information on the DeathTax
             if (NetworkInfo.IsServer)
             {
                 // "DeathTax" is the key which is used to recognize the message in the OnMetaDataChanged function
-                TrySetMetadata("DeathTax", _Val.ToString());
+                TrySetMetadata("DeathTax", _val.ToString());
             }
         }
         
