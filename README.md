@@ -1,6 +1,6 @@
 # ```Github info```
 
-This mod is packed full of comments explainging what's going on, if you're interested in making custom fusion gamemodes, this would be a good place to start!
+This mod is packed full of comments explainging what's going on. If you're interested in making custom fusion gamemodes, this would be a good place to start!
 
 
 ## <p align="right">```Installation```
