@@ -3,7 +3,7 @@
 This mod is packed full of comments explainging what's going on, if you're interested in making custom fusion gamemodes, this would be a good place to start!
 
 
-# ```Installation```
+## <p align="right">```Installation```
 
 Put the `.dll` file in your mods folder
 >The `Mods` folder is located in the same folder as the `BONELAB.exe` file
