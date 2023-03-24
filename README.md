@@ -12,7 +12,11 @@ Put the `.dll` file in your mods folder
 
 <br>
 
-### LAST ONE STANDING
+## LAST ONE STANDING
+
+### Watch the trailer
+[![Error loading image](https://media.discordapp.net/attachments/821903622275203073/1088621012607832104/MR0QCYXD_2x.jpg?width=1246&height=701)](https://youtu.be/r2rByEmdiPQ)
+[Trailer Link](https://youtu.be/r2rByEmdiPQ)
 
 Last One Standing is a pretty simple game mode in which all players battle to the death to be the last one standing. When a player dies, they will not respawn and will instead become a spectator until the match ends.
 
@@ -27,5 +31,8 @@ This mode features a "Death Tax," which is somewhat similar to the arena mode in
 ## <p align="right">```Changelog```
 
 - Version 1.0.0 | Release
+
+
+
 
 
