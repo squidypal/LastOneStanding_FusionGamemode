@@ -1,7 +1,6 @@
 # ```Github info```
 
-This mod is packed full of comments explainging what's going on. If you're interested in making custom fusion gamemodes, this would be a good place to start!
-
+This mod is packed full of comments explaning what's going on. If you're interested in making custom fusion gamemodes, this would be a good place to start!
 
 ## <p align="right">```Installation```
 
@@ -12,7 +11,11 @@ Put the `.dll` file in your mods folder
 
 <br>
 
-### LAST ONE STANDING
+## LAST ONE STANDING
+
+### Watch the trailer
+[![Error loading image](https://media.discordapp.net/attachments/821903622275203073/1088621012607832104/MR0QCYXD_2x.jpg?width=640&height=360)](https://youtu.be/r2rByEmdiPQ)
+- [Trailer Link in-case clicking image doesn't work](https://youtu.be/r2rByEmdiPQ)
 
 Last One Standing is a pretty simple game mode in which all players battle to the death to be the last one standing. When a player dies, they will not respawn and will instead become a spectator until the match ends.
 
@@ -24,8 +27,19 @@ This mode features a "Death Tax," which is somewhat similar to the arena mode in
 
 <br>
 
+### Check out the original Last One Standing song by cazsu
+[![Error loading image](https://media.discordapp.net/attachments/1088643876090294393/1088966139213791272/lastonestanding.png?width=640&height=360)](https://youtu.be/SD4diAB5Dr8)
+- [Song Link in-case clicking image doesn't work](https://youtu.be/SD4diAB5Dr8)
+- Check out cazsu [Here](https://itscazsu.carrd.co/)
 ## <p align="right">```Changelog```
 
+- Version 1.1.0 | New original song
 - Version 1.0.0 | Release
+
+
+
+
+
+
 
 
