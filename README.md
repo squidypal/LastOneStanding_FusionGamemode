@@ -33,7 +33,7 @@ This mode features a "Death Tax," which is somewhat similar to the arena mode in
 - Check out cazsu [Here](https://itscazsu.carrd.co/)
 ## <p align="right">```Changelog```
 
-- Version 1.1.0 | New original song
+- Version 1.1.1 | New original song
 - Version 1.0.0 | Release
 
 
