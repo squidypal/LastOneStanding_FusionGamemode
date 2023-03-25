@@ -1,4 +1,6 @@
-﻿using BoneLib.BoneMenu.Elements;
+﻿using System;
+using System.Collections;
+using BoneLib.BoneMenu.Elements;
 using LabFusion.MarrowIntegration;
 using LabFusion.Network;
 using LabFusion.Representation;
@@ -7,11 +9,13 @@ using LabFusion.Senders;
 using LabFusion.Utilities;
 using System.Collections.Generic;
 using System.Reflection;
+using LabFusion.Data;
 using LabFusion.SDK.Gamemodes;
 using UnityEngine;
 using MelonLoader;
 using SwipezGamemodeLib.Spectator;
 using SwipezGamemodeLib.Utilities;
+using Type = System.Type;
 
 namespace LastOneStanding
 {
@@ -21,18 +25,52 @@ namespace LastOneStanding
         {
             // Required to register your gamemode with fusion
             GamemodeRegistration.LoadGamemodes(Assembly.GetExecutingAssembly());
+            // Loading asset bundle for music
+            var assetBundle = EmbeddedAssetBundle.LoadFromAssembly(Assembly.GetExecutingAssembly(), "LastOneStanding.Resources.megabundle.bigpack");
+            LastOneStanding.gameMusic = assetBundle.LoadPersistentAsset<AudioClip>("last_one_standing");
+            MelonLogger.Msg("Audio imported");
         }
     }
+    
+    // This is what is used to load the asset bundle above
+    public static class AssetBundleExtensioner
+    {
+        public static T LoadPersistentAsset<T>(this AssetBundle bundle, string name) where T : UnityEngine.Object {
+            var asset = bundle.LoadAsset(name);
+
+            if (asset != null) {
+                asset.hideFlags = HideFlags.DontUnloadUnusedAsset;
+                return asset.TryCast<T>();
+            }
+
+            return null;
+        }
+    }
+    
+    // Anything commented out with /* is currently unused code, but may be used in the future
+    
     public class LastOneStanding : Gamemode {
         public static LastOneStanding Instance { get; private set; }
 
         // This gamemode specific stuff: 
-        // Default value for death tax and int used for prize tax
+        // Default value for death tax
         private const int _defaultVal = 20;
-        private int prizeTotal;
+        // Death Tax int
         private int _val = _defaultVal;
+
+        /*
+        // Default value for player health
+        private const float _defaultHealh = 1;
+        // Player health int
+        private float _health = _defaultHealh;
+        */
+        
+        private int prizeTotal;
+
         // Used later for a list of player IDs
         private List<PlayerId> players;
+        // Music
+        public static AudioClip gameMusic;
         
         // Name of gamemode, and the category it should be under (in Bonemenu)
         public override string GamemodeCategory => "Last One Standing";
@@ -61,6 +99,9 @@ namespace LastOneStanding
             category.CreateIntElement("Death tax (Can be set to 0)", Color.green, _val, 10, 0, 1000, (v) => {
                 _val = v;
             });
+            /*category.CreateFloatElement("Player Health", Color.red, _health, 10, 0.1, 10, (x) => {
+                _health = x;
+            });*/
         }
         
         // On MetaDataChanged can be called with a key and value, this can be used to send data to the server
@@ -74,10 +115,9 @@ namespace LastOneStanding
                 // Calculate prize pool
                 int playerCount = PlayerIdManager.PlayerCount - 1;
                 prizeTotal = _val * playerCount;
-                
+                // Send notification with details on prize pool    
                 FusionNotifier.Send(new FusionNotification()                                  
-                {                                                                             
-                    // Send notification with details on prize pool                           
+                {
                     title = "Prize Pool",                                                     
                     showTitleOnPopup = true,                                                  
                     message = "The prize pool is " + prizeTotal + "! " + _val + " per player!",    
@@ -85,7 +125,11 @@ namespace LastOneStanding
                     isPopup = true,                                                           
                     popupLength = 3f,                                                         
                 });   
-            }
+            } /*else if(key == "PlayerHealth")
+            {
+                int.TryParse(value, out _health);
+                FusionPlayer.SetPlayerVitality(_health);
+            }*/
         }
 
          // On player action uses a switch for different cases of player actions
@@ -118,6 +162,10 @@ namespace LastOneStanding
                         }
                         else
                         {
+                            if (players.Count <= 1)
+                            {
+                                return;
+                            }
                             // Announce player death, and number of players left to other players
                             string name;
                             player.TryGetDisplayName(out name);
@@ -162,7 +210,7 @@ namespace LastOneStanding
             if (IsActive())
             {
                 players.Remove(playerId);
-                MakePrizePool();
+                SetMetaData();
             }
         }
 
@@ -200,13 +248,14 @@ namespace LastOneStanding
             }
         }
 
-        private void MakePrizePool()
+        private void SetMetaData()
         {
             // Check if player is the server owner, and if they are send the information on the DeathTax
             if (NetworkInfo.IsServer)
             {
                 // "DeathTax" is the key which is used to recognize the message in the OnMetaDataChanged function
                 TrySetMetadata("DeathTax", _val.ToString());
+                /*TrySetMetadata("PlayerHealth", _health.ToString());*/
             }
         }
         
@@ -215,11 +264,7 @@ namespace LastOneStanding
         {
             base.OnStartGamemode();
             
-            // Run the MakePrizePool function
-            MakePrizePool();
-            
-            // Set all player health to 1 
-            FusionPlayer.SetPlayerVitality(1);
+            SetMetaData();
             
             // Make a list of players 
             players = new List<PlayerId>();
@@ -234,7 +279,7 @@ namespace LastOneStanding
                 isMenuItem = false,
                 isPopup = true,
             });
-
+            
             // PVP Stuffs
             // Run these changes when the level is loaded
             FusionSceneManager.HookOnLevelLoad(() => {
@@ -266,7 +311,7 @@ namespace LastOneStanding
                     FusionPlayer.SetPlayerVitality(_vitalityOverride.Value);
             });
         }
-        
+
         // Runs when gamemode ends or is stopped 
         protected override void OnStopGamemode()
         {
@@ -356,9 +401,9 @@ namespace LastOneStanding
         }
 
         public void SetDefaultValues() {
-            // Steal the deathmatch music x3
-            SetPlaylist(DefaultMusicVolume, FusionContentLoader.CombatPlaylist);
-            
+            // I use custom music here, but you can easily just steal some fusion music with FusionContentLoader.CombatPlaylist
+            SetPlaylist(DefaultMusicVolume, gameMusic);
+
             _avatarOverride = null;
             _vitalityOverride = null;
 
