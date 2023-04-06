@@ -56,15 +56,7 @@ namespace LastOneStanding
         // Default value for death tax
         private const int _defaultVal = 20;
         // Death Tax int
-        private int _val = _defaultVal;
-
-        /*
-        // Default value for player health
-        private const float _defaultHealh = 1;
-        // Player health int
-        private float _health = _defaultHealh;
-        */
-        
+        private int _val = _defaultVal;        
         private int prizeTotal;
 
         // Used later for a list of player IDs
@@ -99,9 +91,7 @@ namespace LastOneStanding
             category.CreateIntElement("Death tax (Can be set to 0)", Color.green, _val, 10, 0, 1000, (v) => {
                 _val = v;
             });
-            /*category.CreateFloatElement("Player Health", Color.red, _health, 10, 0.1, 10, (x) => {
-                _health = x;
-            });*/
+          
         }
         
         // On MetaDataChanged can be called with a key and value, this can be used to send data to the server
@@ -125,11 +115,7 @@ namespace LastOneStanding
                     isPopup = true,                                                           
                     popupLength = 3f,                                                         
                 });   
-            } /*else if(key == "PlayerHealth")
-            {
-                int.TryParse(value, out _health);
-                FusionPlayer.SetPlayerVitality(_health);
-            }*/
+            } 
         }
 
          // On player action uses a switch for different cases of player actions
@@ -255,7 +241,6 @@ namespace LastOneStanding
             {
                 // "DeathTax" is the key which is used to recognize the message in the OnMetaDataChanged function
                 TrySetMetadata("DeathTax", _val.ToString());
-                /*TrySetMetadata("PlayerHealth", _health.ToString());*/
             }
         }
         
